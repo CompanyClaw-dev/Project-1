@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "title": "Cosmic Drift",
+    "artist": "Aethel",
+    "filename": "cosmic_drift.wav",
+    "art": "cosmic_drift.png",
+    "duration": 8
+  },
+  {
+    "id": "2",
+    "title": "Neon Pulse",
+    "artist": "Arcade Echoes",
+    "filename": "neon_pulse.wav",
+    "art": "neon_pulse.png",
+    "duration": 6
+  },
+  {
+    "id": "3",
+    "title": "Solar Wind",
+    "artist": "Helios",
+    "filename": "solar_wind.wav",
+    "art": "solar_wind.png",
+    "duration": 10
+  }
+]
