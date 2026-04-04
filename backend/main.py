@@ -27,12 +27,14 @@ app.add_middleware(
 
 BASE_DIR = Path(__file__).parent
 MUSIC_DIR = BASE_DIR / "music"
+UPLOADS_DIR = MUSIC_DIR / "uploads"
 METADATA_FILE = BASE_DIR / "metadata.json"
 
-# Ensure music directory exists
+# Ensure directories exist
 MUSIC_DIR.mkdir(exist_ok=True)
+UPLOADS_DIR.mkdir(exist_ok=True)
 
-# Serve static music files
+# Serve static music files (uploads subdir is auto-served via parent mount)
 app.mount("/api/music", StaticFiles(directory=str(MUSIC_DIR)), name="music")
 
 
@@ -88,10 +90,10 @@ async def upload_song(
             detail=f"File type '{ext}' not allowed. Allowed: {allowed}"
         )
 
-    # Save file
+    # Save file to uploads/ subdirectory
     song_id = str(uuid.uuid4())[:8]
     safe_name = f"{song_id}_{file.filename}"
-    file_path = MUSIC_DIR / safe_name
+    file_path = UPLOADS_DIR / safe_name
 
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
@@ -104,7 +106,7 @@ async def upload_song(
         "id": song_id,
         "title": song_title,
         "artist": song_artist,
-        "filename": safe_name,
+        "filename": f"uploads/{safe_name}",
         "art": None,
         "duration": None,
     }

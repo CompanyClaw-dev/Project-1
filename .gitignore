@@ -3,8 +3,7 @@ node_modules/
 __pycache__/
 *.pyc
 backend/venv/
-backend/music/*
-!backend/music/.gitkeep
+backend/music/uploads/
 
 # Build
 frontend/dist/
