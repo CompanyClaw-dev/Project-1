@@ -1,121 +1,96 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from "react";
+import { PlayerProvider, usePlayer } from "./context/PlayerContext";
+import Player from "./components/Player";
+import Playlist from "./components/Playlist";
+import NowPlaying from "./components/NowPlaying";
+import SearchBar from "./components/SearchBar";
+import UploadModal from "./components/UploadModal";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+function AppContent() {
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const { playlist, loading, error } = usePlayer();
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app" id="app">
+      {/* Header */}
+      <header className="header" id="header">
+        <div className="header__brand">
+          <div className="header__logo">
+            <svg viewBox="0 0 24 24" fill="white" width="18" height="18">
+              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55C7.79 13 6 14.79 6 17s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+            </svg>
+          </div>
+          <span className="header__title">SoundWave</span>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className="header__actions">
+          <SearchBar />
+          <button
+            className="header__upload-btn"
+            id="btn-upload"
+            onClick={() => setUploadOpen(true)}
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+              <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z" />
+            </svg>
+            Upload
+          </button>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      </header>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* Main content */}
+      <main className="app__main">
+        {error && (
+          <div className="error-banner" id="error-banner">
+            ⚠ {error} — Make sure the backend is running on port 8000
+          </div>
+        )}
+
+        <div className="content">
+          {/* Left: Now Playing */}
+          <div className="content__left">
+            {loading ? (
+              <div className="loading">
+                <div className="loading__spinner"></div>
+              </div>
+            ) : (
+              <NowPlaying />
+            )}
+          </div>
+
+          {/* Right: Playlist */}
+          <div className="content__right">
+            <div className="content__right-header">
+              <h3>Playlist</h3>
+              <span>{playlist.length} songs</span>
+            </div>
+            <Playlist />
+          </div>
+        </div>
+      </main>
+
+      {/* Bottom Player Bar */}
+      <Player />
+
+      {/* Upload Modal */}
+      <UploadModal isOpen={uploadOpen} onClose={() => setUploadOpen(false)} />
+
+      {/* Keyboard shortcuts hint */}
+      <div className="keyboard-hint">
+        <kbd>Space</kbd> Play
+        <kbd>←→</kbd> Skip
+        <kbd>↑↓</kbd> Vol
+        <kbd>M</kbd> Mute
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default function App() {
+  return (
+    <PlayerProvider>
+      <AppContent />
+    </PlayerProvider>
+  );
+}
