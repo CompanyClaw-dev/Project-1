@@ -1,6 +1,6 @@
 # 🎧 SoundWave — Web Music Player
 
-A full-stack music player with a premium Spotify-inspired dark UI, built with React + Vite (frontend) and FastAPI (backend).
+A full stack music player with a premium Spotify-inspired dark UI, built with React + Vite (frontend) and FastAPI (backend).
 
 ## Features
 
